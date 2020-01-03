@@ -43,6 +43,23 @@ class Dog
     Student.new(result[0], result[1], result[2])
   end
   
+   def self.find_or_create_by(name:, breed:)
+    sql = <<-SQL
+      SELECT * FROM dogs
+      WHERE name = ? AND breed = ?
+      SQL
+
+
+      dog = DB[:conn].execute(sql, name, breed).first
+
+      if dog
+        new_dog = self.new_from_db(dog)
+      else
+        new_dog = self.create({:name => name, :breed => breed})
+      end
+      new_dog
+  end
+  
    def self.drop_table
     sql = <<-SQL
       DROP TABLE dogs
@@ -51,18 +68,18 @@ class Dog
   end
   
   def self.new_from_db(row)
-    student = self.new(row[0], row[1], row[2])
-    student
+    dog = self.new(row[0], row[1], row[2])
+    dog
   end
   
   def update
     sql = <<-SQL
-      UPDATE students
-      SET name = ?, grade = ?
+      UPDATE dog
+      SET name = ?, breed = ?
       WHERE id = ?
       SQL
 
-      DB[:conn].execute(sql, self.name, self.grade, self.id)
+      DB[:conn].execute(sql, self.name, self.breed, self.id)
   end
 
 
