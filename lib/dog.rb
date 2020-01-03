@@ -33,10 +33,10 @@ attr_reader :id
       end
   end
  
-  def self.create(name, breed)
-    student = Student.new(name, grade)
-    student.save
-    student
+  def self.create(attributes)
+    dog = Dog.new(attributes)
+    dog.save
+    dog
   end
  
   def self.find_by_name(name)
